@@ -1,6 +1,8 @@
 
 // 
 const ROCK_PAPER_SCISSORS = ['rock', 'paper', 'scissors'];
+const WIN = 'win';
+const LOSE = 'lose';
 
 // Get a random choice from the computer: rock, paper or scissors.
 function getComputerChoice() {
@@ -21,6 +23,8 @@ function getPlayerChoice() {
 }
 
 // Play one round of rock, paper, scissors, given the player and computer choices
+// Return an array: 1st element is win/lose/tie, 
+// 2nd element is an array showing order of which choice "beats" the other choice.
 function playRound(playerChoice, computerChoice) {
 
 	// Find the index of player and coputer choices in the ROCK_PAPER_SCISSORS array
@@ -29,19 +33,37 @@ function playRound(playerChoice, computerChoice) {
 
 	// Tie condtion.
 	if (computer_ix === player_ix) {
-		return "Tie.  Play again...";
+		return ["tie", ["try again.."]];
 	}
 
 	// Use mod3 to simulate a circular linked list of length=3
-	// Player or Computer choice furthest in list wins
 	if (computer_ix === (player_ix + 1) % 3) {
-		return `You lose, ${computerChoice} beats ${playerChoice}`;
+		return ["lose", [computerChoice, playerChoice]];
 	}
 
 	// Only remaining case is player win
-	return `You win, ${playerChoice} beats ${computerChoice}`;
+	return ["win", [playerChoice, computerChoice]];
 }
 
 //
-function game() {
+function game(numRounds=5) {
+
+	const winScore = Math.floor(numRounds / 2) + 1;
+	let playerScore = 0;
+	let computerScore = 0;
+	let winOrLose, xBeatsY;
+
+	while (playerScore !== winScore && computerScore !== winScore) {
+
+		[winOrLose, xBeatsY] = playRound(getPlayerChoice(), getComputerChoice());
+
+		if (     winOrLose === WIN)  {playerScore++}
+		else if (winOrLose === LOSE) {computerScore++}
+
+		console.log(`You ${winOrLose}, ${xBeatsY.join(" beats ")}. ${playerScore} - ${computerScore}`);
+	}
+
+	return "Game Over.";
 }
+
+console.log(game());
