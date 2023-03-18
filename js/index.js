@@ -66,4 +66,4 @@ function game(numRounds=5) {
 	return "Game Over.";
 }
 
-console.log(game());
+//console.log(game());
