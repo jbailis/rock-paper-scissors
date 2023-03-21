@@ -66,4 +66,22 @@ function game(numRounds=5) {
 	return "Game Over.";
 }
 
+
+
+const buttons = document.querySelectorAll('button');
+
+// css background styles for rock paper scissors buttons
+const bg = btn => `background: url(./images/${btn.className}.png);`;
+const bgSize = "background-size: 200px;";
+const bgRepeat = "background-repeat: no-repeat;";
+
+buttons.forEach(btn => {
+	// set button styles
+	btn.setAttribute('style', bg(btn) + bgSize + bgRepeat);
+	// set button event handling
+	btn.addEventListener("click", () => console.log("HELLOWORLD"));
+});
+
+console.log(buttons[0]);
+
 //console.log(game());

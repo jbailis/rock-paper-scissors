@@ -12,3 +12,9 @@ img {
 .vs {
 	display: flex;
 }
+
+button {
+	height: 300px;
+	width: 300px;
+	border: none;
+}
