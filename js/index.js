@@ -1,8 +1,31 @@
 
 // 
 const ROCK_PAPER_SCISSORS = ['rock', 'paper', 'scissors'];
+const PLAYER = 'player';
+const COMPUTER = 'computer';
 const WIN = 'win';
 const LOSE = 'lose';
+
+const numRounds = 5;
+const winScore = Math.floor(numRounds / 2) + 1;
+const score = {'player': 0, 'computer': 0};
+
+function getScore(user) {
+	return score[user];
+};
+
+function setScore(user, num) {
+	score[user] = num;
+};
+
+function updateScore(user) {
+	setScore(user, getScore(user) + 1);
+};
+
+function resetScore() {
+	setScore(PLAYER, 0);
+	setScore(COMPUTER, 0);
+};
 
 // Get a random choice from the computer: rock, paper or scissors.
 function getComputerChoice() {
@@ -46,24 +69,18 @@ function playRound(playerChoice, computerChoice) {
 }
 
 //
-function game(numRounds=5) {
+function game(buttonEvent) {
 
-	const winScore = Math.floor(numRounds / 2) + 1;
-	let playerScore = 0;
-	let computerScore = 0;
 	let winOrLose, xBeatsY;
 
-	while (playerScore !== winScore && computerScore !== winScore) {
+	[winOrLose, xBeatsY] = playRound(buttonEvent.className, getComputerChoice());
 
-		[winOrLose, xBeatsY] = playRound(getPlayerChoice(), getComputerChoice());
+	if (winOrLose === WIN) {updateScore(PLAYER)};
+	if (winOrLose === LOSE) {updateScore(COMPUTER)};
 
-		if (     winOrLose === WIN)  {playerScore++}
-		else if (winOrLose === LOSE) {computerScore++}
+	const footerDivText = `You ${winOrLose}, ${xBeatsY.join(" beats ")}. ${getScore(PLAYER)} - ${getScore(COMPUTER)}`;
 
-		console.log(`You ${winOrLose}, ${xBeatsY.join(" beats ")}. ${playerScore} - ${computerScore}`);
-	}
-
-	return "Game Over.";
+	console.log(footerDivText);
 }
 
 
@@ -79,9 +96,5 @@ buttons.forEach(btn => {
 	// set button styles
 	btn.setAttribute('style', bg(btn) + bgSize + bgRepeat);
 	// set button event handling
-	btn.addEventListener("click", () => console.log("HELLOWORLD"));
+	btn.addEventListener("click", game);
 });
-
-console.log(buttons[0]);
-
-//console.log(game());
