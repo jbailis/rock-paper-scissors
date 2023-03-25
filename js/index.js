@@ -3,6 +3,7 @@
 const ROCK_PAPER_SCISSORS = ['rock', 'paper', 'scissors'];
 const PLAYER = 'player';
 const COMPUTER = 'computer';
+const USERS = [PLAYER, COMPUTER];
 const WIN = 'win';
 const LOSE = 'lose';
 
@@ -10,40 +11,15 @@ const numRounds = 5;
 const winScore = Math.floor(numRounds / 2) + 1;
 const score = {'player': 0, 'computer': 0};
 
-function getScore(user) {
-	return score[user];
-};
-
-function setScore(user, num) {
-	score[user] = num;
-};
-
-function updateScore(user) {
-	setScore(user, getScore(user) + 1);
-};
-
-function resetScore() {
-	setScore(PLAYER, 0);
-	setScore(COMPUTER, 0);
-};
+const getScore = user => score[user];
+const setScore = (user, num) => score[user] = num;
+const updateScore = user => setScore(user, getScore(user) + 1);
+const resetScore = () => USERS.forEach(user => setScore(user, 0));
+const checkScore = () => USERS.some(user => getScore(user) === winScore);
 
 // Get a random choice from the computer: rock, paper or scissors.
-function getComputerChoice() {
-	return ROCK_PAPER_SCISSORS[Math.floor(Math.random() * 3)];
-}
+const getComputerChoice = () => ROCK_PAPER_SCISSORS[Math.floor(Math.random() * 3)];
 
-// Get a choice from the user: rock, paper or scissors.
-function getPlayerChoice() {
-	let validChoice, userInput;
-
-	while (!validChoice) {
-		userInput = prompt("Rock, Paper or Scissors??:");
-		
-		validChoice = ROCK_PAPER_SCISSORS.find(e => e === userInput.toLowerCase());
-	}
-
-	return validChoice;
-}
 
 // Play one round of rock, paper, scissors, given the player and computer choices
 // Return an array: 1st element is win/lose/tie, 
@@ -69,23 +45,32 @@ function playRound(playerChoice, computerChoice) {
 }
 
 //
-function game(buttonEvent) {
+function game() {
 
 	let winOrLose, xBeatsY;
 
-	[winOrLose, xBeatsY] = playRound(buttonEvent.className, getComputerChoice());
+	[winOrLose, xBeatsY] = playRound(this.className, getComputerChoice());
 
 	if (winOrLose === WIN) {updateScore(PLAYER)};
 	if (winOrLose === LOSE) {updateScore(COMPUTER)};
 
-	const footerDivText = `You ${winOrLose}, ${xBeatsY.join(" beats ")}. ${getScore(PLAYER)} - ${getScore(COMPUTER)}`;
+	let resultMessage = `You ${winOrLose}, ${xBeatsY.join(" beats ")}. ${getScore(PLAYER)} - ${getScore(COMPUTER)}`;
 
-	console.log(footerDivText);
+	if (checkScore()) {
+		resultMessage += ' Game Over.';
+		resetScore();
+	}
+	console.log(resultMessage);
+	writeResult(resultMessage);
 }
 
 
 
 const buttons = document.querySelectorAll('button');
+const resultBox = document.querySelector('.result-box');
+
+//
+const writeResult = result => resultBox.textContent = result;
 
 // css background styles for rock paper scissors buttons
 const bg = btn => `background: url(./images/${btn.className}.png);`;
